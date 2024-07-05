@@ -1,0 +1,1 @@
+Óla, meu nome é João Gabriel, e esse projeto se trata da criação de um site com medidas para evitar o Web-Scraping por parte de terceiros; Sinta-se livre para colaborar e fazer comentários construtivos.
