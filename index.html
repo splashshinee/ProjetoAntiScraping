@@ -10,17 +10,22 @@
         .content {
             display: none;
         }
-        .captcha-container {
+        .captcha-container, .loading-container {
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             background-color: #121212;
+            color: #e0e0e0;
         }
     </style>
 </head>
 <body>
-    <div class="captcha-container" id="captcha-container">
+    <div class="loading-container" id="loading-container">
+        <p>Verificando IP...</p>
+    </div>
+
+    <div class="captcha-container" id="captcha-container" style="display: none;">
         <div class="h-captcha" data-sitekey="7d68e0ce-3c90-4bf0-8a9a-1f3849a0475e" data-callback="captchaVerified"></div>
     </div>
 
@@ -64,9 +69,6 @@
             <a href="block.html" style="display: none;">Honeypot 2</a>
             <a href="block.html" style="display: none;">Honeypot 3</a>
         </main>
-        <footer>
-            <p>&copy; 2024 Respawn News</p>
-        </footer>
     </div>
 
     <script>
@@ -74,6 +76,22 @@
             document.getElementById('captcha-container').style.display = 'none';
             document.getElementById('content').style.display = 'block';
         }
+
+        async function checkIpReputation() {
+            try {
+                const response = await fetch('https://YOUR_RENDER_APP_NAME.vercel.app/api/check-ip');
+                if (response.ok) {
+                    document.getElementById('loading-container').style.display = 'none';
+                    document.getElementById('captcha-container').style.display = 'flex';
+                } else {
+                    document.getElementById('loading-container').innerHTML = '<p>Access Denied</p>';
+                }
+            } catch (error) {
+                document.getElementById('loading-container').innerHTML = '<p>Internal Server Error</p>';
+            }
+        }
+
+        window.onload = checkIpReputation;
     </script>
 </body>
 </html>
