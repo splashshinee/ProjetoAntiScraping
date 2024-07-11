@@ -10,18 +10,17 @@
         .content {
             display: none;
         }
-        .captcha-container, .loading-container {
+        .captcha-container {
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             background-color: #121212;
-            color: #e0e0e0;
         }
     </style>
 </head>
 <body>
-    <div class="captcha-container" id="captcha-container" style="display: none;">
+    <div class="captcha-container" id="captcha-container">
         <div class="h-captcha" data-sitekey="7d68e0ce-3c90-4bf0-8a9a-1f3849a0475e" data-callback="captchaVerified"></div>
     </div>
 
