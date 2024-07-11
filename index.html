@@ -76,22 +76,6 @@
             document.getElementById('captcha-container').style.display = 'none';
             document.getElementById('content').style.display = 'block';
         }
-
-        async function checkIpReputation() {
-            try {
-                const response = await fetch('/check-ip');
-                if (response.ok) {
-                    document.getElementById('loading-container').style.display = 'none';
-                    document.getElementById('captcha-container').style.display = 'flex';
-                } else {
-                    document.getElementById('loading-container').innerHTML = '<p>Access Denied</p>';
-                }
-            } catch (error) {
-                document.getElementById('loading-container').innerHTML = '<p>Internal Server Error</p>';
-            }
-        }
-
-        window.onload = checkIpReputation;
     </script>
 </body>
 </html>
