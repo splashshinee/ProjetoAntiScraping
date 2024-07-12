@@ -64,16 +64,45 @@
             <a href="block.html" style="display: none;">Honeypot 2</a>
             <a href="block.html" style="display: none;">Honeypot 3</a>
         </main>
-        <footer>
-            <p>&copy; 2024 Respawn News</p>
-        </footer>
     </div>
 
     <script>
+        // Funções para gerenciar cookies
+        function setCookie(name, value, days) {
+            const date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            const expires = "expires=" + date.toUTCString();
+            document.cookie = name + "=" + value + ";" + expires + ";path=/";
+        }
+
+        function getCookie(name) {
+            const nameEQ = name + "=";
+            const ca = document.cookie.split(';');
+            for(let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
+
+        // Função de callback do hCaptcha
         function captchaVerified() {
+            setCookie('hcaptcha-verified', 'true', 1); // Cookie válido por 1 dia
             document.getElementById('captcha-container').style.display = 'none';
             document.getElementById('content').style.display = 'block';
         }
+
+        // Verificar se o cookie está presente ao carregar a página
+        window.onload = function() {
+            if (getCookie('hcaptcha-verified')) {
+                document.getElementById('captcha-container').style.display = 'none';
+                document.getElementById('content').style.display = 'block';
+            } else {
+                document.getElementById('captcha-container').style.display = 'flex';
+                document.getElementById('content').style.display = 'none';
+            }
+        };
     </script>
 </body>
 </html>
