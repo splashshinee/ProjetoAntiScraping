@@ -1,119 +1,58 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Respawn News</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
-    <style>
-        .content {
-            display: none;
-        }
-        .captcha-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #121212;
-        }
-    </style>
+    <script src="https://hcaptcha.com/1/api.js" async defer></script>
 </head>
 <body>
-    <div class="captcha-container" id="captcha-container">
-        <div class="h-captcha" data-sitekey="7d68e0ce-3c90-4bf0-8a9a-1f3849a0475e" data-callback="captchaVerified"></div>
+    <div id="captcha-container" style="display:none; justify-content:center; align-items:center; height:100vh;">
+        <div class="h-captcha" data-sitekey="7d68e0ce-3c90-4bf0-8a9a-1f3849a0475e" data-callback="hcaptchaCallback"></div>
     </div>
-
-    <div class="content" id="content">
-        <header>
-            <h1>Respawn News</h1>
-        </header>
-        <main>
-            <section class="headline">
-                <a href="noticia1.html">
-                    <img src="https://e0.pxfuel.com/wallpapers/221/875/desktop-wallpaper-soldier-tf2-tf2-medic-2560-by-1440.jpg" alt="Imagem da Notícia 1">
-                    <h2>A contagem de jogadores do 'Team Fortress 2' dobra após a pressão dos fãs fazer a Valve intervir com uma onda de banimentos para demolir bots e uma linha firme sobre apelações: 'Não'</h2>
-                </a>
-            </section>
-            <section class="headline">
-                <a href="noticia2.html">
-                    <img src="https://p325k7wa.twic.pics/high/dragon-ball/dragon-ball-sparking-zero/00-page-setup/Page-Setup-Revamp/DBSZ_banner_mobile.jpg?twic=v1/resize=760/step=10/quality=80" alt="Imagem da Notícia 2">
-                    <h2>'Dragon Ball Z: Sparking! ZERO' vai trazer controles tradicionais de Budokai</h2>
-                </a>
-            </section>
-            <section class="headline">
-                <a href="noticia3.html">
-                    <img src="https://files.meiobit.com/wp-content/uploads/2024/07/helldivers-2-02.jpg" alt="Imagem da Notícia 3">
-                    <h2>2023 foi o ano com mais lançamentos e vendas de jogos coop no Steam</h2>
-                </a>
-            </section>
-            <section class="headline">
-                <a href="noticia4.html">
-                    <img src="https://sm.ign.com/ign_pt/photo/b/beyond-goo/beyond-good-evil-20th-anniversary-edition-officially-unveile_w1jr.jpg" alt="Imagem da Notícia 4">
-                    <h2>Beyond Good & Evil 20th Anniversary Edition coloca fim a mistério de 20 anos</h2>
-                </a>
-            </section>
-            <section class="headline">
-                <a href="noticia5.html">
-                    <img src="https://cdn.wccftech.com/wp-content/uploads/2024/07/dead-rising-deluxe-remaster-key-HD-scaled.jpg" alt="Imagem da Notícia 5">
-                    <h2>Pré-venda de Dead Rising Deluxe Remaster já disponível para PS5, Xbox Series e PC</h2>
-                </a>
-            </section>
-            <!-- Honeypots -->
-            <a href="block.html" style="display: none;">Honeypot 1</a>
-            <a href="block.html" style="display: none;">Honeypot 2</a>
-            <a href="block.html" style="display: none;">Honeypot 3</a>
-        </main>
+    <div id="content" style="display:none;">
+        <!-- Seu conteúdo aqui -->
     </div>
-
     <script>
-        // Funções para gerenciar cookies
-        function setCookie(name, value, days) {
-            const date = new Date();
-            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-            const expires = "expires=" + date.toUTCString();
-            document.cookie = name + "=" + value + ";" + expires + ";path=/";
-        }
-
         function getCookie(name) {
-            const nameEQ = name + "=";
-            const ca = document.cookie.split(';');
-            for(let i = 0; i < ca.length; i++) {
-                let c = ca[i];
-                while (c.charAt(0) === ' ') c = c.substring(1, c.length);
-                if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+            let cookieArr = document.cookie.split(";");
+
+            for (let i = 0; i < cookieArr.length; i++) {
+                let cookiePair = cookieArr[i].split("=");
+
+                if (name == cookiePair[0].trim()) {
+                    return decodeURIComponent(cookiePair[1]);
+                }
             }
             return null;
         }
 
-        // Função de callback do hCaptcha
-        function captchaVerified() {
-            setCookie('hcaptcha-verified', 'true', 1); // Cookie válido por 1 dia
+        function setCookie(name, value, days) {
+            let expires = "";
+            if (days) {
+                let date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                expires = "; expires=" + date.toUTCString();
+            }
+            document.cookie = name + "=" + (value || "") + expires + "; path=/";
+        }
+
+        function hcaptchaCallback() {
+            setCookie('hcaptcha-verified', 'true', 1);
             document.getElementById('captcha-container').style.display = 'none';
             document.getElementById('content').style.display = 'block';
         }
 
-        // Verificar se o cookie está presente ao carregar a página
-        window.onload = function() {
-            fetch('https://seu-backend.vercel.app/api/check-ip')
-                .then(response => {
-                    if (response.status === 429) {
-                        alert('Você fez muitas solicitações. Tente novamente mais tarde.');
-                        document.body.innerHTML = '';
-                    } else {
-                        if (getCookie('hcaptcha-verified')) {
-                            document.getElementById('captcha-container').style.display = 'none';
-                            document.getElementById('content').style.display = 'block';
-                        } else {
-                            document.getElementById('captcha-container').style.display = 'flex';
-                            document.getElementById('content').style.display = 'none';
-                        }
-                    }
-                })
-                .catch(error => {
-                    console.error('Erro ao verificar rate limiting:', error);
-                });
-        };
+        document.addEventListener("DOMContentLoaded", function() {
+            if (getCookie('hcaptcha-verified')) {
+                document.getElementById('captcha-container').style.display = 'none';
+                document.getElementById('content').style.display = 'block';
+            } else {
+                document.getElementById('captcha-container').style.display = 'flex';
+                document.getElementById('content').style.display = 'none';
+            }
+        });
     </script>
 </body>
 </html>
